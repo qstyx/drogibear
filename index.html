@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.2.1/css/bootstrap.min.css">
+   <link rel="stylesheet" href="assets/css/loaders.css">
+   <link rel="stylesheet" href="assets/css/main.css">
+  <title>Smart Home</title>
+</head>
+
+<body style="background-color: gray">
+<nav id="navbar-site" class="navbar navbar-dark bg-dark navbar-expand-sm">
+  <a class="navbar-brand" href="#">Smart Home <span class="text-danger">Theft Alert</span></a>
+   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+   </button>
+  <div class="collapse navbar-collapse" id="navbarNavDropdown">
+    <ul class="navbar-nav"">
+      <li class="nav-item"><a class="nav-link" href="#features">Dashboard</a></li>
+      <li class="nav-item"><a class="nav-link" href="#reports">Reports</a></li>
+      <li class="nav-item"><a class="nav-link" href="#about">About</a></li>
+    </ul><!--navbar list container -->
+  </div><!-- navbar-collapse dropdown-  -->
+</nav><!-- navbar-list -->
+<!--CONTENT START --->
+<div class="container-fluid" style="text-align: center;">
+  <h4 class="text-information">Hello World!</h4>
+  <div class="row">
+    <div class="col-sm-8" style="background-color:lavender;">Messages goes here
+      <div class="row">
+        <!----->
+        <div class="col-sm-6" style="background-color:lightcyan;">Light icon here
+          <div style="text-align:all;">
+            <img src="assets/img/light128px.png" style="text-align:right; left;border: 1px solid red">
+            <span id="lightdata" class="loader-inner ball-pulse-rise">....</span> 
+          </div>                 
+        </div>
+        <!----->
+        <!----->
+        <div class="col-sm-6" style="background-color:lightgray;">.col-sm-6
+          <div id="displaychecker">
+            <h3>
+              <span id="lightdata" class="loader-inner ball-pulse-rise">....</span> 
+            </h3>
+          </div>
+        </div>
+        <!----->
+        <!----->
+        <div class="col-sm-6" style="background-color:lightblue;">.col-sm-6
+        </div>
+        <!----->
+        <div class="col-sm-6" style="background-color:lightgreen;">.col-sm-6</div>        
+      </div>
+    </div>
+ 
+    <div class="col-sm-4" style="background-color:lavenderblush;">This is .col-sm-4 for livestream
+<!-------INSERT YOUR YOUTUBE IFRAME HERE---------------->      
+      <div class="embed-responsive embed-responsive-16by9">
+        <iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/jCfo96X-Deg" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+      </div>
+<!-------INSERT YOUR YOUTUBE IFRAME HERE---------------->  
+
+    </div>
+
+
+    <div class="col-sm-8" style="background-color:lavender;">About
+      <!--<div class="row">
+        <div class="col-sm-6" style="background-color:lightcyan;">.col-sm-6</div>
+        <div class="col-sm-6" style="background-color:lightgray;">.col-sm-6</div>
+      </div>-->
+    </div>
+  </div>
+</div>
+<!--CONTENT END --->
+<!--START: JS CDNs + Custom js -->
+   <script src="https://code.jquery.com/jquery-3.0.0.min.js"></script>
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.slim.js"></script>
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.2.1/js/bootstrap.min.js"></script>
+   <!--script src="assets/js/popper.min.js"></script-->
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/loaders.css/0.1.2/loaders.min.css"></script>
+   <script src="assets/js/loaders.css.js"></script>
+<!--END: JS CDNs + Custom js -->
+<!--START: Loads loaders.css -->
+   <script>
+    $(document).ready(function(){
+      $('main').hide;
+
+      $(window).on({
+        load:function(){
+          $('.loaders').hide();
+          $('main').show();
+        }
+      })
+    })
+    </script>
+<!--END: Loads loaders.css -->
+<!--START: CPF API -->
+<script>
+
+  var lightValue;
+  var motionValue = 0;
+  
+  function main() {
+      lightValue= cpf.get("a3");
+      motionValue= cpf.get("d5");
+      document.getElementById("lightdata").innerHTML = lightValue;
+      if(motionValue == 1) {
+        cpf.request('["grove_setColorRGB", 0, 255, 0, 0]');
+        cpf.request('["tone_play", 6, 293, 300]');
+        document.getElementById("movDetected").style.opacity = "1";
+      } else{
+        cpf.request('["grove_setColorRGB", 0, 0, 0, 0]');
+        document.getElementById("movDetected").style.opacity = "0";
+      }
+    setTimeout(main, 1000); 
+  }
+  // Removed temperature sensor A0
+  // Initial Setup: Temperature A0; Light Sensor A3; Motion Sensor D5; Buzzer D6; 1 led D7
+    function setup() {
+    cpf.setPinMode('["resetPin"],["setPinMode", "analog", 0, "INPUT"],["setPinMode", "analog", 3, "INPUT"], ["setPinMode", "digital", 5, "INPUT"],["setPinMode", "digital", 6, "TONE"],["grove_newChainableLED", 7, 8, 1]');
+  }// send for setup()
+
+  setup();
+  main();
+</script>
+<!--END: CPF API -->
+
+</body>
+</html>
